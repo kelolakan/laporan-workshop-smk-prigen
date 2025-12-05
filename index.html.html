@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Interaktif: Workshop Jago Hitungan Jago Masa Depan</title>
+    
+    <!-- CSS Framework: Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Charting Library: Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons: Font Awesome (No SVG usage) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Config for Chart Containers & General Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Slate-50: Warm neutral background */
+            color: #1e293b; /* Slate-800: High contrast text */
+        }
+
+        /* CRITICAL: Chart Container Styling per Requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Max-w-xl equivalent */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height for mobile */
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px; /* Adjusted for tablets/desktops */
+            }
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+
+    <!-- Placeholder Comments Required by Prompt -->
+    <!-- Chosen Palette: Slate (Background/Text) & Emerald/Indigo (Accents) - Professional, Academic, Trustworthy -->
+    
+    <!-- Application Structure Plan:
+         1. Hero Header: Clear title and context setting.
+         2. Executive Summary Dashboard: 3 Key Metrics cards (Score, NPS, Highlight) for immediate impact.
+         3. Quantitative Deep Dive: Interactive Bar Chart with filtering (Outcome vs. Execution) to allow users to explore specific data points without clutter.
+         4. Performance Radar: A Radar chart to visualize the "shape" of the workshop's success across 8 dimensions.
+         5. Qualitative Insights: Doughnut chart for "Best Topics" and a text-based breakdown for "Improvements" to balance visual load.
+         6. Strategic Recommendations: Interactive Accordion/Cards that expand to show "Action Items" based on the report's strategic advice.
+         This structure moves from high-level summary to detailed data, then to qualitative feedback, and ends with actionable future steps.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Metric Cards: Simple big numbers for Q1-Q8 Avg & NPS. Goal: Inform quickly.
+         2. Interactive Bar Chart: Chart.js Horizontal Bar. Goal: Compare specific question scores. Interaction: Filter buttons. Justification: Horizontal bars are best for long question labels.
+         3. Radar Chart: Chart.js Radar. Goal: Relationships/Shape. Justification: Shows balance between Execution and Outcome metrics effectively.
+         4. Doughnut Chart: Chart.js. Goal: Inform proportions of "Best Topics". Justification: Simple part-to-whole relationship for qualitative themes.
+         5. Recommendation Cards: HTML/JS Toggle. Goal: Inform/Organize. Justification: Keeps UI clean, reveals detail on demand.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="antialiased">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-chart-line text-emerald-600 text-2xl mr-3"></i>
+                    <div>
+                        <h1 class="font-bold text-xl text-slate-800">Laporan Evaluasi Workshop</h1>
+                        <p class="text-xs text-slate-500">"Jago Hitungan Jago Masa Depan" - SMK Prigen</p>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-emerald-400">Status: Selesai</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Wrapper -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- SECTION 1: EXECUTIVE SUMMARY -->
+        <section>
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-slate-800">Ringkasan Eksekutif</h2>
+                <p class="text-slate-600 mt-2 max-w-3xl">
+                    Bagian ini menyajikan metrik kinerja utama (KPI) dari workshop. Data ini memberikan gambaran cepat mengenai keberhasilan acara dalam mentransformasi pandangan siswa Akuntansi menjadi strategis finansial.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1: Overall Score -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-slate-500">Skor Rata-Rata</h3>
+                        <div class="p-2 bg-emerald-100 rounded-full">
+                            <i class="fa-solid fa-star text-emerald-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold text-slate-800">4.75</span>
+                        <span class="ml-1 text-sm text-slate-500">/ 5.0</span>
+                    </div>
+                    <p class="mt-2 text-sm text-emerald-600 font-medium">
+                        <i class="fa-solid fa-arrow-up"></i> Kategori: Sangat Baik
+                    </p>
+                </div>
+
+                <!-- Card 2: NPS -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-slate-500">Net Promoter Score</h3>
+                        <div class="p-2 bg-indigo-100 rounded-full">
+                            <i class="fa-solid fa-users text-indigo-600"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold text-slate-800">9.6</span>
+                        <span class="ml-1 text-sm text-slate-500">/ 10.0</span>
+                    </div>
+                    <p class="mt-2 text-sm text-indigo-600 font-medium">
+                        <i class="fa-solid fa-heart"></i> Loyalitas Tinggi (Promoter)
+                    </p>
+                </div>
+
+                <!-- Card 3: Highlight -->
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-sm border border-slate-700 p-6 text-white card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-slate-300">Keunggulan Utama</h3>
+                        <div class="p-2 bg-slate-700 rounded-full">
+                            <i class="fa-solid fa-trophy text-yellow-400"></i>
+                        </div>
+                    </div>
+                    <p class="text-lg font-semibold leading-relaxed">
+                        Praktik Pembuatan "Pitch Deck" & Kualitas Narasumber
+                    </p>
+                    <p class="mt-2 text-xs text-slate-400">
+                        Topik paling diminati peserta.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: QUANTITATIVE ANALYSIS (Interactive) -->
+        <section>
+            <div class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Analisis Kinerja Kuantitatif</h2>
+                    <p class="text-slate-600 mt-2 max-w-2xl">
+                        Eksplorasi data penilaian peserta (Skala 1-5). Gunakan tombol filter di bawah untuk membedakan antara Dampak Pembelajaran (Outcome) dan Kualitas Pelaksanaan.
+                    </p>
+                </div>
+                
+                <!-- Interactive Controls -->
+                <div class="inline-flex rounded-md shadow-sm" role="group">
+                    <button type="button" onclick="updateChart('all')" class="px-4 py-2 text-sm font-medium text-slate-900 bg-white border border-slate-200 rounded-l-lg hover:bg-slate-100 hover:text-emerald-700 focus:z-10 focus:ring-2 focus:ring-emerald-700 focus:text-emerald-700 transition-colors" id="btn-all">
+                        Semua
+                    </button>
+                    <button type="button" onclick="updateChart('outcome')" class="px-4 py-2 text-sm font-medium text-slate-900 bg-white border-t border-b border-slate-200 hover:bg-slate-100 hover:text-emerald-700 focus:z-10 focus:ring-2 focus:ring-emerald-700 focus:text-emerald-700 transition-colors" id="btn-outcome">
+                        Dampak (Outcome)
+                    </button>
+                    <button type="button" onclick="updateChart('execution')" class="px-4 py-2 text-sm font-medium text-slate-900 bg-white border border-slate-200 rounded-r-lg hover:bg-slate-100 hover:text-emerald-700 focus:z-10 focus:ring-2 focus:ring-emerald-700 focus:text-emerald-700 transition-colors" id="btn-execution">
+                        Pelaksanaan
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left: Bar Chart Container -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Detail Skor Indikator</h3>
+                    <!-- Chart Container per Requirements -->
+                    <div class="chart-container">
+                        <canvas id="metricsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Right: Radar Chart for "Shape of Success" -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Peta Keseimbangan Workshop</h3>
+                    <p class="text-xs text-slate-500 text-center mb-4">Membandingkan keseimbangan antara aspek materi dan penyampaian.</p>
+                    <!-- Chart Container per Requirements -->
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    
+                    <!-- Insight Box -->
+                    <div class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-lightbulb text-amber-500 mt-1 mr-2"></i>
+                            <div>
+                                <h4 class="text-sm font-bold text-amber-800">Insight Penting</h4>
+                                <p class="text-xs text-amber-700 mt-1">
+                                    Skor terendah adalah <strong>Q2 (4.30)</strong>: Pemahaman Konsep. Meskipun tinggi, ini menunjukkan kesenjangan dengan motivasi siswa yang sangat tinggi (4.80).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: QUALITATIVE INSIGHTS -->
+        <section class="bg-slate-100 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-8 text-center">
+                    <h2 class="text-2xl font-bold text-slate-800">Suara Peserta (Kualitatif)</h2>
+                    <p class="text-slate-600 mt-2">Analisis dari pertanyaan terbuka mengenai bagian terbaik dan area yang perlu ditingkatkan.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Positive Feedback -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="text-lg font-bold text-emerald-800 mb-6 flex items-center">
+                            <i class="fa-solid fa-thumbs-up mr-2"></i> Topik Paling Bermanfaat
+                        </h3>
+                        <div class="flex flex-col md:flex-row items-center gap-6">
+                            <div class="chart-container" style="max-height: 250px;">
+                                <canvas id="topicChart"></canvas>
+                            </div>
+                            <div class="flex-1 space-y-3 w-full">
+                                <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg border-l-4 border-emerald-500">
+                                    <span class="text-sm font-medium">Pitch Deck</span>
+                                    <span class="text-xs font-bold bg-white px-2 py-1 rounded shadow-sm">10 Responden</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg border-l-4 border-teal-500">
+                                    <span class="text-sm font-medium">Analisis Keuangan</span>
+                                    <span class="text-xs font-bold bg-white px-2 py-1 rounded shadow-sm">8 Responden</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-slate-50 rounded-lg border-l-4 border-blue-500">
+                                    <span class="text-sm font-medium">Wawasan Karir</span>
+                                    <span class="text-xs font-bold bg-white px-2 py-1 rounded shadow-sm">8 Responden</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Improvement Areas -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col">
+                        <h3 class="text-lg font-bold text-slate-700 mb-6 flex items-center">
+                            <i class="fa-solid fa-comment-dots mr-2"></i> Area Peningkatan
+                        </h3>
+                        
+                        <div class="flex-1 flex flex-col justify-center items-center text-center space-y-6">
+                            <div class="w-full bg-slate-100 rounded-full h-4 overflow-hidden relative">
+                                <div class="bg-emerald-500 h-full" style="width: 95%"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 w-full">
+                                <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                                    <span class="block text-3xl font-bold text-emerald-600">35</span>
+                                    <span class="text-xs text-emerald-800 uppercase tracking-wide font-semibold">Sudah Puas / Tidak Ada</span>
+                                </div>
+                                <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                    <span class="block text-3xl font-bold text-slate-500">2</span>
+                                    <span class="text-xs text-slate-500 uppercase tracking-wide font-semibold">Saran Materi</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-500 italic">
+                                "Mayoritas peserta (95%) menyatakan tidak ada kekurangan yang berarti dalam pelaksanaan workshop."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: STRATEGIC RECOMMENDATIONS (Actionable) -->
+        <section>
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-slate-800">Rekomendasi Strategis</h2>
+                <p class="text-slate-600 mt-2">
+                    Langkah konkret yang dapat diambil SMK Prigen berdasarkan analisis data untuk meningkatkan kualitas jurusan. Klik kartu untuk melihat detail tindakan.
+                </p>
+            </div>
+
+            <div class="space-y-4" id="recommendations-container">
+                <!-- Recommendation 1 -->
+                <div class="group bg-white border border-slate-200 rounded-lg shadow-sm hover:border-emerald-500 transition-colors cursor-pointer overflow-hidden" onclick="toggleRec('rec1')">
+                    <div class="p-5 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-emerald-100 p-3 rounded-full group-hover:bg-emerald-500 transition-colors">
+                                <i class="fa-solid fa-laptop-file text-emerald-600 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-800">1. Integrasi Praktik Berbasis Output</h3>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform" id="icon-rec1"></i>
+                    </div>
+                    <div id="rec1" class="hidden px-5 pb-5 ml-16 text-slate-600 border-t border-slate-100 pt-4">
+                        <p class="mb-2"><strong class="text-slate-800">Fokus:</strong> Menjembatani motivasi tinggi dengan pemahaman konsep.</p>
+                        <p><strong class="text-slate-800">Tindakan:</strong> Formalisasikan praktik pembuatan "Pitch Deck Keuangan Sederhana" atau studi kasus Analisis BEP ke dalam kegiatan intrakurikuler siswa.</p>
+                    </div>
+                </div>
+
+                <!-- Recommendation 2 -->
+                <div class="group bg-white border border-slate-200 rounded-lg shadow-sm hover:border-indigo-500 transition-colors cursor-pointer overflow-hidden" onclick="toggleRec('rec2')">
+                    <div class="p-5 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-indigo-100 p-3 rounded-full group-hover:bg-indigo-500 transition-colors">
+                                <i class="fa-solid fa-handshake text-indigo-600 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-800">2. Program Guru Tamu Berkala</h3>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform" id="icon-rec2"></i>
+                    </div>
+                    <div id="rec2" class="hidden px-5 pb-5 ml-16 text-slate-600 border-t border-slate-100 pt-4">
+                        <p class="mb-2"><strong class="text-slate-800">Fokus:</strong> Memanfaatkan tingginya minat pada Wawasan Karir.</p>
+                        <p><strong class="text-slate-800">Tindakan:</strong> Kerjasama Jangka Panjang dengan PT Kelola Lebih Baik untuk sesi rutin setiap semester fokus pada <em>skill & career path</em>.</p>
+                    </div>
+                </div>
+
+                <!-- Recommendation 3 -->
+                <div class="group bg-white border border-slate-200 rounded-lg shadow-sm hover:border-blue-500 transition-colors cursor-pointer overflow-hidden" onclick="toggleRec('rec3')">
+                    <div class="p-5 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 p-3 rounded-full group-hover:bg-blue-500 transition-colors">
+                                <i class="fa-solid fa-star-half-stroke text-blue-600 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-800">3. Pertahankan Kualitas Pelaksanaan</h3>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform" id="icon-rec3"></i>
+                    </div>
+                    <div id="rec3" class="hidden px-5 pb-5 ml-16 text-slate-600 border-t border-slate-100 pt-4">
+                        <p class="mb-2"><strong class="text-slate-800">Fokus:</strong> Konsistensi narasumber dan metode interaktif.</p>
+                        <p><strong class="text-slate-800">Tindakan:</strong> Gunakan narasumber dengan kualifikasi setara dan pertahankan format tanya jawab aktif yang terbukti efektif (Skor 4.70).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-slate-500 text-sm">© 2025 Laporan Evaluasi Workshop SMK Prigen. Data diolah dari umpan balik peserta.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA STORE ---
+        const reportData = {
+            outcome: {
+                labels: ['Relevansi Materi (Q1)', 'Pemahaman Konsep (Q2)', 'Motivasi Kompetensi (Q3)', 'Wawasan Karir (Q4)'],
+                data: [4.80, 4.30, 4.80, 4.85],
+                colors: 'rgba(16, 185, 129, 0.7)', // Emerald
+                border: 'rgba(16, 185, 129, 1)'
+            },
+            execution: {
+                labels: ['Penguasaan Materi (Q5)', 'Gaya Penyampaian (Q6)', 'Efektivitas Diskusi (Q7)', 'Kecukupan Waktu (Q8)'],
+                data: [4.85, 4.80, 4.70, 4.70],
+                colors: 'rgba(79, 70, 229, 0.7)', // Indigo
+                border: 'rgba(79, 70, 229, 1)'
+            },
+            qualitative: {
+                labels: ['Pitch Deck', 'Analisis Keuangan', 'Wawasan Karir'],
+                data: [10, 8, 8]
+            }
+        };
+
+        // --- CHART CONFIGURATIONS ---
+
+        // 1. MAIN METRICS CHART (Bar)
+        const ctxMetrics = document.getElementById('metricsChart').getContext('2d');
+        let metricsChart = new Chart(ctxMetrics, {
+            type: 'bar',
+            data: {
+                labels: [...reportData.outcome.labels, ...reportData.execution.labels],
+                datasets: [{
+                    label: 'Skor Rata-Rata (Skala 5)',
+                    data: [...reportData.outcome.data, ...reportData.execution.data],
+                    backgroundColor: [
+                        ...Array(4).fill(reportData.outcome.colors),
+                        ...Array(4).fill(reportData.execution.colors)
+                    ],
+                    borderColor: [
+                        ...Array(4).fill(reportData.outcome.border),
+                        ...Array(4).fill(reportData.execution.border)
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal Bar for readability
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: false,
+                        min: 3.5, // Zoom in on high scores
+                        max: 5.0,
+                        grid: { color: '#f1f5f9' }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw + ' / 5.0';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. RADAR CHART (Shape of Success)
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['Relevansi', 'Pemahaman', 'Motivasi', 'Wawasan', 'Penguasaan', 'Penyampaian', 'Diskusi', 'Waktu'],
+                datasets: [{
+                    label: 'Profil Workshop',
+                    data: [4.80, 4.30, 4.80, 4.85, 4.85, 4.80, 4.70, 4.70],
+                    fill: true,
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    borderColor: 'rgb(16, 185, 129)',
+                    pointBackgroundColor: 'rgb(16, 185, 129)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(16, 185, 129)'
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                elements: {
+                    line: { borderWidth: 3 }
+                },
+                scales: {
+                    r: {
+                        angleLines: { color: '#e2e8f0' },
+                        grid: { color: '#e2e8f0' },
+                        suggestedMin: 3.5,
+                        suggestedMax: 5
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 3. QUALITATIVE TOPIC CHART (Doughnut)
+        const ctxTopic = document.getElementById('topicChart').getContext('2d');
+        new Chart(ctxTopic, {
+            type: 'doughnut',
+            data: {
+                labels: reportData.qualitative.labels,
+                datasets: [{
+                    data: reportData.qualitative.data,
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)', // Emerald
+                        'rgba(20, 184, 166, 0.8)', // Teal
+                        'rgba(59, 130, 246, 0.8)'  // Blue
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { usePointStyle: true, font: { size: 11 } }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+
+        // --- INTERACTION LOGIC ---
+
+        // Function to update Main Metrics Chart
+        function updateChart(type) {
+            // Update button styles
+            const btns = ['all', 'outcome', 'execution'];
+            btns.forEach(btn => {
+                const el = document.getElementById(`btn-${btn}`);
+                if (btn === type) {
+                    el.classList.add('bg-slate-100', 'text-emerald-700', 'ring-2', 'ring-emerald-700');
+                    el.classList.remove('bg-white', 'text-slate-900');
+                } else {
+                    el.classList.remove('bg-slate-100', 'text-emerald-700', 'ring-2', 'ring-emerald-700');
+                    el.classList.add('bg-white', 'text-slate-900');
+                }
+            });
+
+            // Update Chart Data
+            if (type === 'outcome') {
+                metricsChart.data.labels = reportData.outcome.labels;
+                metricsChart.data.datasets[0].data = reportData.outcome.data;
+                metricsChart.data.datasets[0].backgroundColor = Array(4).fill(reportData.outcome.colors);
+                metricsChart.data.datasets[0].borderColor = Array(4).fill(reportData.outcome.border);
+            } else if (type === 'execution') {
+                metricsChart.data.labels = reportData.execution.labels;
+                metricsChart.data.datasets[0].data = reportData.execution.data;
+                metricsChart.data.datasets[0].backgroundColor = Array(4).fill(reportData.execution.colors);
+                metricsChart.data.datasets[0].borderColor = Array(4).fill(reportData.execution.border);
+            } else {
+                metricsChart.data.labels = [...reportData.outcome.labels, ...reportData.execution.labels];
+                metricsChart.data.datasets[0].data = [...reportData.outcome.data, ...reportData.execution.data];
+                metricsChart.data.datasets[0].backgroundColor = [...Array(4).fill(reportData.outcome.colors), ...Array(4).fill(reportData.execution.colors)];
+                metricsChart.data.datasets[0].borderColor = [...Array(4).fill(reportData.outcome.border), ...Array(4).fill(reportData.execution.border)];
+            }
+            metricsChart.update();
+        }
+
+        // Function to Toggle Recommendation Cards
+        function toggleRec(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // Initialize active state on 'All' button
+        document.getElementById('btn-all').classList.add('bg-slate-100', 'text-emerald-700', 'ring-2', 'ring-emerald-700');
+
+    </script>
+</body>
+</html>
